@@ -18,7 +18,7 @@ public class ListItemData {
 
     private boolean mIsMostVisibleItemChanged;
 
-    public int getIndex() {
+    public Integer getIndex() {
         return mIndexInAdapter;
     }
 

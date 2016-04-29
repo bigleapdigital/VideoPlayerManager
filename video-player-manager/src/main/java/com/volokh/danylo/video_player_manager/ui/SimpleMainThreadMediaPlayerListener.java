@@ -34,4 +34,9 @@ public class SimpleMainThreadMediaPlayerListener implements MediaPlayerWrapper.M
     public void onVideoStoppedMainThread() {
 
     }
+
+    @Override
+    public void onVideoRenderingStart() {
+
+    }
 }

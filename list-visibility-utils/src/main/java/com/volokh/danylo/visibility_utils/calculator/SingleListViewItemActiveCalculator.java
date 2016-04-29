@@ -73,8 +73,16 @@ public class SingleListViewItemActiveCalculator extends BaseItemsVisibilityCalcu
         ListItemData listItemData = mCurrentItem;
         if(SHOW_LOGS) Logger.v(TAG, "onStateTouchScroll, listItemData " + listItemData);
 
-        calculateActiveItem(itemsPositionGetter, listItemData);
-        if(SHOW_LOGS) Logger.v(TAG, "<< onStateTouchScroll, mScrollDirection " + mScrollDirection);
+        if (listItemData.getIndex() != null)
+        {
+            calculateActiveItem(itemsPositionGetter, listItemData);
+            if(SHOW_LOGS) Logger.v(TAG, "<< onStateTouchScroll, mScrollDirection " + mScrollDirection);
+        }
+        else
+        {
+            if (SHOW_LOGS)
+                Logger.w(TAG, "MISSING ITEM: onStateTouchScroll, mScrollDirection " + mScrollDirection);
+        }
     }
 
     /**

@@ -91,6 +91,15 @@ public abstract class MediaPlayerWrapper
         }
     };
 
+    private final Runnable mOnVideoRenderingMessage = new Runnable() {
+        @Override
+        public void run() {
+            if (SHOW_LOGS) Logger.v(TAG, ">> run, onVideoRenderingStart");
+            mListener.onVideoRenderingStart();
+            if (SHOW_LOGS) Logger.v(TAG, "<< run, onVideoRenderingStart");
+        }
+    };
+
     public void prepare() {
         if (SHOW_LOGS) Logger.v(TAG, ">> prepare, mState " + mState);
 
@@ -279,6 +288,9 @@ public abstract class MediaPlayerWrapper
                 if (SHOW_LOGS) Logger.inf(TAG, "onInfo, MEDIA_INFO_VIDEO_TRACK_LAGGING");
                 break;
             case MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
+                if (mListener != null) {
+                    mMainThreadHandler.post(mOnVideoRenderingMessage);
+                }
                 if (SHOW_LOGS) Logger.inf(TAG, "onInfo, MEDIA_INFO_VIDEO_RENDERING_START");
                 break;
             case MediaPlayer.MEDIA_INFO_BUFFERING_START:
@@ -662,6 +674,8 @@ public abstract class MediaPlayerWrapper
         void onBufferingUpdateMainThread(int percent);
 
         void onVideoStoppedMainThread();
+
+        void onVideoRenderingStart();
     }
 
     public interface VideoStateListener {

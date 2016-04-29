@@ -436,6 +436,18 @@ public class VideoPlayerView extends ScalableTextureView
         notifyOnVideoStopped();
     }
 
+    @Override
+    public void onVideoRenderingStart() {
+        if (SHOW_LOGS) Logger.v(TAG, "notifyOnVideoRenderingStart");
+        List<MediaPlayerWrapper.MainThreadMediaPlayerListener> listCopy;
+        synchronized (mMediaPlayerMainThreadListeners){
+            listCopy = new ArrayList<>(mMediaPlayerMainThreadListeners);
+        }
+        for (MediaPlayerWrapper.MainThreadMediaPlayerListener listener : listCopy) {
+            listener.onVideoRenderingStart();
+        }
+    }
+
     private void printErrorExtra(int extra) {
         switch (extra){
             case MediaPlayer.MEDIA_ERROR_IO:

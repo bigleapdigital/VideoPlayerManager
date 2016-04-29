@@ -9,8 +9,7 @@ import android.widget.ListView;
  *
  * Created by danylo.volokh on 1/17/2016.
  */
-public class ListViewItemPositionGetter implements ItemsPositionGetter{
-
+public class ListViewItemPositionGetter implements ItemsPositionGetter {
     private final ListView mListView;
 
     public ListViewItemPositionGetter(ListView listView) {
@@ -19,17 +18,17 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter{
 
     @Override
     public View getChildAt(int position) {
-        return mListView.getChildAt(position);
+        return mListView.getChildAt(mListView.getHeaderViewsCount() + position);
     }
 
     @Override
     public int indexOfChild(View view) {
-        return mListView.indexOfChild(view);
+        return mListView.indexOfChild(view) - mListView.getHeaderViewsCount();
     }
 
     @Override
     public int getChildCount() {
-        return mListView.getChildCount();
+        return mListView.getChildCount() - mListView.getHeaderViewsCount() - mListView.getFooterViewsCount();
     }
 
     @Override
@@ -42,3 +41,4 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter{
         return mListView.getFirstVisiblePosition();
     }
 }
+
