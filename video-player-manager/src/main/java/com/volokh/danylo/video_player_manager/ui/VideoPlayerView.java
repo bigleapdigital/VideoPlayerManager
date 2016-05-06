@@ -699,9 +699,11 @@ public class VideoPlayerView extends ScalableTextureView
                     break;
                 case INVISIBLE:
                 case GONE:
-                    synchronized (mReadyForPlaybackIndicator){
-                        // have to notify worker thread in case we exited this screen without getting ready for playback
-                        mReadyForPlaybackIndicator.notifyAll();
+                    if (mReadyForPlaybackIndicator != null) {
+                        synchronized (mReadyForPlaybackIndicator) {
+                            // have to notify worker thread in case we exited this screen without getting ready for playback
+                            mReadyForPlaybackIndicator.notifyAll();
+                        }
                     }
             }
         }
