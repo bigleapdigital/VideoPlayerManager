@@ -156,6 +156,7 @@ public class VideoPlayerView extends ScalableTextureView
         synchronized (mReadyForPlaybackIndicator){
 
             mMediaPlayer = new MediaPlayerWrapperImpl();
+            if (isAllVideoMute()) muteVideo();
 
             mReadyForPlaybackIndicator.setVideoSize(null, null);
             mReadyForPlaybackIndicator.setFailedToPrepareUiForPlayback(false);
@@ -515,14 +516,16 @@ public class VideoPlayerView extends ScalableTextureView
     public void muteVideo() {
         synchronized (mReadyForPlaybackIndicator) {
             PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(IS_VIDEO_MUTED, true).commit();
-            mMediaPlayer.setVolume(0, 0);
+            if (mMediaPlayer != null)
+                mMediaPlayer.setVolume(0, 0);
         }
     }
 
     public void unMuteVideo() {
         synchronized (mReadyForPlaybackIndicator) {
             PreferenceManager.getDefaultSharedPreferences(getContext()).edit().putBoolean(IS_VIDEO_MUTED, false).commit();
-            mMediaPlayer.setVolume(1, 1);
+            if (mMediaPlayer != null)
+                mMediaPlayer.setVolume(1, 1);
         }
     }
 
