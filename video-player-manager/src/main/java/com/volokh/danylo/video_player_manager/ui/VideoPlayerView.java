@@ -448,6 +448,16 @@ public class VideoPlayerView extends ScalableTextureView
         }
     }
 
+    @Override
+    public void onVideoBufferingStart() {
+
+    }
+
+    @Override
+    public void onVideoBufferingStop() {
+
+    }
+
     private void printErrorExtra(int extra) {
         switch (extra){
             case MediaPlayer.MEDIA_ERROR_IO:

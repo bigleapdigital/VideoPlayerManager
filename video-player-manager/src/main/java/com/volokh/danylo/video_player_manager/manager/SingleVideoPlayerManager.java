@@ -447,4 +447,14 @@ public class SingleVideoPlayerManager implements VideoPlayerManager<MetaData>, V
     public void onVideoRenderingStart() {
 
     }
+
+    @Override
+    public void onVideoBufferingStart() {
+
+    }
+
+    @Override
+    public void onVideoBufferingStop() {
+
+    }
 }

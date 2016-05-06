@@ -92,10 +92,28 @@ public abstract class MediaPlayerWrapper
     };
 
     private final Runnable mOnVideoRenderingMessage = new Runnable() {
+    @Override
+    public void run() {
+        if (SHOW_LOGS) Logger.v(TAG, ">> run, onVideoRenderingStart");
+        mListener.onVideoRenderingStart();
+        if (SHOW_LOGS) Logger.v(TAG, "<< run, onVideoRenderingStart");
+    }
+};
+
+    private final Runnable mOnVideoBufferingStartMessage = new Runnable() {
         @Override
         public void run() {
             if (SHOW_LOGS) Logger.v(TAG, ">> run, onVideoRenderingStart");
-            mListener.onVideoRenderingStart();
+            mListener.onVideoBufferingStart();
+            if (SHOW_LOGS) Logger.v(TAG, "<< run, onVideoRenderingStart");
+        }
+    };
+
+    private final Runnable mOnVideoBufferingStopMessage = new Runnable() {
+        @Override
+        public void run() {
+            if (SHOW_LOGS) Logger.v(TAG, ">> run, onVideoRenderingStart");
+            mListener.onVideoBufferingStop();
             if (SHOW_LOGS) Logger.v(TAG, "<< run, onVideoRenderingStart");
         }
     };
@@ -294,9 +312,15 @@ public abstract class MediaPlayerWrapper
                 if (SHOW_LOGS) Logger.inf(TAG, "onInfo, MEDIA_INFO_VIDEO_RENDERING_START");
                 break;
             case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                if (mListener != null) {
+                    mMainThreadHandler.post(mOnVideoBufferingStartMessage);
+                }
                 if (SHOW_LOGS) Logger.inf(TAG, "onInfo, MEDIA_INFO_BUFFERING_START");
                 break;
             case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                if (mListener != null) {
+                    mMainThreadHandler.post(mOnVideoBufferingStopMessage);
+                }
                 if (SHOW_LOGS) Logger.inf(TAG, "onInfo, MEDIA_INFO_BUFFERING_END");
                 break;
             case MediaPlayer.MEDIA_INFO_BAD_INTERLEAVING:
@@ -514,7 +538,25 @@ public abstract class MediaPlayerWrapper
     }
 
     public void setVolume(float leftVolume, float rightVolume) {
-        mMediaPlayer.setVolume(leftVolume, rightVolume);
+
+        synchronized (mState) {
+            switch (mState.get()) {
+                case IDLE:
+                case INITIALIZED:
+                case PREPARING:
+                case PREPARED:
+                case STARTED:
+                case PAUSED:
+                case STOPPED:
+                case PLAYBACK_COMPLETED:
+                    mMediaPlayer.setVolume(leftVolume, rightVolume);
+                    break;
+                case ERROR:
+                case END:
+                    if (SHOW_LOGS) Logger.w(TAG, "setVolume, illegal state");
+                    break;
+            }
+        }
     }
 
     public int getVideoWidth() {
@@ -676,6 +718,10 @@ public abstract class MediaPlayerWrapper
         void onVideoStoppedMainThread();
 
         void onVideoRenderingStart();
+
+        void onVideoBufferingStart();
+
+        void onVideoBufferingStop();
     }
 
     public interface VideoStateListener {
