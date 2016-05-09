@@ -65,6 +65,16 @@ public class MediaPlayerWrapperMainThreadListenerTest {
         public void onVideoRenderingStart() {
 
         }
+
+        @Override
+        public void onVideoBufferingStart() {
+
+        }
+
+        @Override
+        public void onVideoBufferingStop() {
+
+        }
     };
 
     @Before

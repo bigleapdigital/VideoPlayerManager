@@ -33,12 +33,24 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
 
     @Override
     public int getLastVisiblePosition() {
-        return mListView.getLastVisiblePosition();
+
+        int position = mListView.getLastVisiblePosition() - mListView.getHeaderViewsCount();
+
+        if (position >= mListView.getChildCount())
+            position -= mListView.getFooterViewsCount();
+
+        return position;
     }
 
     @Override
     public int getFirstVisiblePosition() {
-        return mListView.getFirstVisiblePosition();
+
+        int position = mListView.getFirstVisiblePosition() - mListView.getHeaderViewsCount();
+
+        if (position < 0)
+            position += mListView.getHeaderViewsCount();
+
+        return position;
     }
 }
 
