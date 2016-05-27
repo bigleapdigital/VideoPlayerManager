@@ -101,11 +101,7 @@ public abstract class ScalableTextureView extends TextureView{
                 }
                 break;
             case MATCH_WIDTH:
-                if (viewWidth != 0)
-                {
-                    scaleX = convertPixelsToDp(viewWidth) / contentWidth;
-                    scaleY = convertPixelsToDp(viewWidth) / contentWidth;
-                }
+                scaleY = (viewWidth * contentHeight) / (viewHeight * contentWidth);
                 break;
             case BOTTOM:
             case CENTER_CROP:
@@ -160,9 +156,7 @@ public abstract class ScalableTextureView extends TextureView{
         float fitCoef = 1;
         switch (mScaleType) {
             case FILL:
-                break;
             case MATCH_WIDTH:
-                fitCoef = viewWidth / (viewWidth * scaleX);
                 break;
             case BOTTOM:
             case CENTER_CROP:
@@ -183,20 +177,6 @@ public abstract class ScalableTextureView extends TextureView{
 
         updateMatrixScaleRotate();
         if (SHOW_LOGS) Logger.d(TAG, "<< updateTextureViewSize");
-    }
-
-    private float convertDpToPixel(float dp){
-        Resources resources = getContext().getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
-    }
-
-    private float convertPixelsToDp(float px){
-        Resources resources = getContext().getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return dp;
     }
 
     private void updateMatrixScaleRotate() {
