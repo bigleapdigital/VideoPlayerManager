@@ -5,6 +5,6 @@ package com.volokh.danylo.visibility_utils.utils;
  */
 public class Config {
 
-    public static final boolean SHOW_LOGS = true;
+    public static final boolean SHOW_LOGS = false;
 
 }
