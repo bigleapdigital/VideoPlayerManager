@@ -1,8 +1,10 @@
 package com.volokh.danylo.video_player_manager.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Matrix;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.TextureView;
 
 import com.volokh.danylo.video_player_manager.Config;
@@ -37,7 +39,7 @@ public abstract class ScalableTextureView extends TextureView{
     private ScaleType mScaleType;
 
     public enum ScaleType {
-        CENTER_CROP, TOP, BOTTOM, FILL
+        CENTER_CROP, TOP, BOTTOM, FILL, MATCH_WIDTH
     }
 
     public ScalableTextureView(Context context) {
@@ -98,6 +100,13 @@ public abstract class ScalableTextureView extends TextureView{
                     scaleY = (viewWidth * contentHeight) / (viewHeight * contentWidth);
                 }
                 break;
+            case MATCH_WIDTH:
+                if (viewWidth != 0)
+                {
+                    scaleX = convertPixelsToDp(viewWidth) / contentWidth;
+                    scaleY = convertPixelsToDp(viewWidth) / contentWidth;
+                }
+                break;
             case BOTTOM:
             case CENTER_CROP:
             case TOP:
@@ -133,6 +142,7 @@ public abstract class ScalableTextureView extends TextureView{
                 pivotPointY = viewHeight;
                 break;
             case CENTER_CROP:
+            case MATCH_WIDTH:
                 pivotPointX = viewWidth / 2;
                 pivotPointY = viewHeight / 2;
                 break;
@@ -150,6 +160,9 @@ public abstract class ScalableTextureView extends TextureView{
         float fitCoef = 1;
         switch (mScaleType) {
             case FILL:
+                break;
+            case MATCH_WIDTH:
+                fitCoef = viewWidth / (viewWidth * scaleX);
                 break;
             case BOTTOM:
             case CENTER_CROP:
@@ -170,6 +183,20 @@ public abstract class ScalableTextureView extends TextureView{
 
         updateMatrixScaleRotate();
         if (SHOW_LOGS) Logger.d(TAG, "<< updateTextureViewSize");
+    }
+
+    private float convertDpToPixel(float dp){
+        Resources resources = getContext().getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
+    }
+
+    private float convertPixelsToDp(float px){
+        Resources resources = getContext().getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
     }
 
     private void updateMatrixScaleRotate() {
