@@ -11,32 +11,53 @@ import android.widget.ListView;
  */
 public class ListViewItemPositionGetter implements ItemsPositionGetter {
     private final ListView mListView;
+    private final View mHeaderView;
+    private final View mFooterView;
 
-    public ListViewItemPositionGetter(ListView listView) {
+    public ListViewItemPositionGetter(ListView listView, View headerView, View footerView) {
         mListView = listView;
+        mHeaderView = headerView;
+        mFooterView = footerView;
     }
 
     @Override
     public View getChildAt(int position) {
-        return mListView.getChildAt(mListView.getHeaderViewsCount() + position);
+        for(int i = 0; i < mListView.getChildCount(); i++)
+        {
+            View v = mListView.getChildAt(i);
+
+            if (v == mHeaderView || v == mFooterView)
+                position++;
+        }
+
+        return mListView.getChildAt(position);
     }
 
     @Override
     public int indexOfChild(View view) {
-        return mListView.indexOfChild(view) - mListView.getHeaderViewsCount();
+        int position = mListView.indexOfChild(view);
+
+        for(int i = 0; i < position; i++)
+        {
+            View v = mListView.getChildAt(i);
+
+            if (v == mHeaderView || v == mFooterView)
+                position++;
+        }
+
+        return position;
     }
 
     @Override
     public int getChildCount() {
-        return mListView.getChildCount() - mListView.getHeaderViewsCount() - mListView.getFooterViewsCount();
+        return mListView.getChildCount();
     }
 
     @Override
     public int getLastVisiblePosition() {
-
         int position = mListView.getLastVisiblePosition() - mListView.getHeaderViewsCount();
 
-        if (position >= mListView.getChildCount())
+        if (position >= getChildCount())
             position -= mListView.getFooterViewsCount();
 
         return position;
@@ -44,11 +65,10 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
 
     @Override
     public int getFirstVisiblePosition() {
-
         int position = mListView.getFirstVisiblePosition() - mListView.getHeaderViewsCount();
 
         if (position < 0)
-            position += mListView.getHeaderViewsCount();
+            position = 0;
 
         return position;
     }
