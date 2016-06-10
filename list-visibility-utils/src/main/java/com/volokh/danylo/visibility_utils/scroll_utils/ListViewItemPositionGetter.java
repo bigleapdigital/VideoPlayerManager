@@ -26,7 +26,7 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
         {
             View v = mListView.getChildAt(i);
 
-            if (v == mHeaderView || v == mFooterView)
+            if (v == mHeaderView)
                 position++;
         }
 
@@ -35,17 +35,25 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
 
     @Override
     public int indexOfChild(View view) {
-        int position = mListView.indexOfChild(view);
-
-        for(int i = 0; i < position; i++)
+        int position = 0;
+        for(int i = 0; i < mListView.getChildCount(); i++)
         {
             View v = mListView.getChildAt(i);
 
-            if (v == mHeaderView || v == mFooterView)
+            if (v == view)
+                return position;
+
+            if ((mHeaderView != null && v == mHeaderView) || (mFooterView != null && v == mFooterView))
+            {
+
+            }
+            else
+            {
                 position++;
+            }
         }
 
-        return position;
+        return 0;
     }
 
     @Override
@@ -56,8 +64,14 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
         {
             View v = mListView.getChildAt(i);
 
-            if (v != mHeaderView && v != mFooterView)
+            if ((mHeaderView != null && v == mHeaderView) || (mFooterView != null && v == mFooterView))
+            {
+
+            }
+            else
+            {
                 count++;
+            }
         }
 
         return count;
@@ -65,14 +79,11 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
 
     @Override
     public int getLastVisiblePosition() {
-        int position = mListView.getLastVisiblePosition() - mListView.getHeaderViewsCount();
-
-        if (position < 0)
-            position = 0;
+        int position = mListView.getLastVisiblePosition();
 
         int count = mListView.getCount() - mListView.getHeaderViewsCount() - mListView.getFooterViewsCount();
 
-        if (position > count - 1)
+        if (position > count - 1 && count > 0)
             position = count - 1;
 
         return position;
