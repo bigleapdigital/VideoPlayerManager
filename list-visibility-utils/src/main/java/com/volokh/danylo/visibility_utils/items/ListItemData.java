@@ -2,6 +2,7 @@ package com.volokh.danylo.visibility_utils.items;
 
 import android.app.LauncherActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import com.volokh.danylo.visibility_utils.utils.Config;
 import com.volokh.danylo.visibility_utils.utils.Logger;
@@ -38,8 +39,8 @@ public class ListItemData {
         return isAvailable;
     }
 
-    public int getVisibilityPercents(List<? extends ListItem> listItems) {
-        int visibilityPercents = listItems.get(getIndex()).getVisibilityPercents(getView());
+    public int getVisibilityPercents(ArrayAdapter<? extends ListItem> adapter) {
+        int visibilityPercents = adapter.getItem(getIndex()).getVisibilityPercents(getView());
         if(SHOW_LOGS) Logger.v(TAG, "getVisibilityPercents, visibilityPercents " + visibilityPercents);
         return visibilityPercents;
     }
