@@ -69,4 +69,11 @@ public class RecyclerViewItemPositionGetter implements ItemsPositionGetter {
         if(SHOW_LOGS) Logger.v(TAG, "getFirstVisiblePosition, findFirstVisibleItemPosition " + mLayoutManager.findFirstVisibleItemPosition());
         return mLayoutManager.findFirstVisibleItemPosition();
     }
+
+    @Override
+    public int getPositionForView(View view) {
+        int index = mRecyclerView.getChildAdapterPosition(view);
+
+        return index;
+    }
 }

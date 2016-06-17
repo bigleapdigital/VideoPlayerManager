@@ -21,4 +21,6 @@ public interface ItemsPositionGetter {
     int getLastVisiblePosition();
 
     int getFirstVisiblePosition();
+
+    int getPositionForView(View view);
 }

@@ -3,6 +3,8 @@ package com.volokh.danylo.visibility_utils.scroll_utils;
 import android.view.View;
 import android.widget.ListView;
 
+import com.volokh.danylo.visibility_utils.utils.Logger;
+
 /**
  * This class is an API for {@link com.volokh.danylo.visibility_utils.calculator.ListItemsVisibilityCalculator}
  * Using this class is can access all the data from ListView
@@ -99,6 +101,11 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
             position = 0;
 
         return position;
+    }
+
+    @Override
+    public int getPositionForView(View view) {
+        return mListView.getPositionForView(view) - mListView.getHeaderViewsCount();
     }
 }
 
