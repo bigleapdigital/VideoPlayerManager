@@ -105,6 +105,9 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
 
     @Override
     public int getPositionForView(View view) {
+        if (view == null)
+            return 0;
+
         return mListView.getPositionForView(view) - mListView.getHeaderViewsCount();
     }
 }
