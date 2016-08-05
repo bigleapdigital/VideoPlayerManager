@@ -90,6 +90,9 @@ public class ListViewItemPositionGetter implements ItemsPositionGetter {
         if (position > count - 1 && count > 0)
             position = count - 1;
 
+        if (position < 0)
+            position = 0;
+
         return position;
     }
 
